@@ -86,7 +86,7 @@ def get_download_link(df):
 
 # App Layout
 def main():
-    st.title("🧠 NeuroPlex")
+    #st.title("🧠 NeuroPlex")
     st.markdown("## NeuroPlex – An Innovative Neuro-AI Approach in Alzheimer's Therapeutics")
 
     st.markdown("""
@@ -129,7 +129,7 @@ def main():
                 st.error(f"❌ Error: {e}")
 
     st.markdown("---")
-    st.markdown("## 👨‍🔬 NeuroPlex Team")
+    st.markdown("## NeuroPlex Team")
 
     # Define columns for the profiles
     col1, col2, col3 = st.columns([1, 1, 1])
