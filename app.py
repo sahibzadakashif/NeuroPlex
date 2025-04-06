@@ -260,7 +260,8 @@ with col2:
     st.markdown("""
         <div style='line-height: 1.1;'>
             <h3>Dr. Andleeb Batool</h3>
-            Assistant Professor | Department of Zoology, GCU, Lahore<br>
+            Assistant Professor | Department of Zoology<br>
+            Government College University, Lahore<br>
             Email: andleeb.batool@gcu.edu.pk
         </div>
     """, unsafe_allow_html=True)
