@@ -17,7 +17,7 @@ from rdkit.Chem import AllChem
 
     # Set the page config
     st.set_page_config(
-        page_title='OctaScanner',
+        page_title='NeuroPlex',
         layout='wide',
         initial_sidebar_state='expanded',
         page_icon='🎡',
@@ -65,7 +65,7 @@ from rdkit.Chem import AllChem
      # Add the image and title at the top of the page
     col1, col2, col3 = st.columns([1,2,3])
     with col1:
-        st.image("hiv2.jpg", width=580)
+        st.image("image.png", width=580)
     with col3:
         st.markdown("<h1 class='header-title'>NeuroPlex – An Innovative Approach towards Alzheimer Therapeutics</h1>", unsafe_allow_html=True)
         st.markdown("""
@@ -75,7 +75,7 @@ from rdkit.Chem import AllChem
         """, unsafe_allow_html=True)
 # Add university logos to the page
     left_logo, center, right_logo = st.columns([1, 2, 1])
-    center.image("ref.jpg", width=650)
+    center.image("alzheimer.png", width=650)
     #right_logo.image("image.jpg", width=250)
 if __name__ == "__main__":
     main()
