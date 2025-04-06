@@ -23,13 +23,13 @@ st.set_page_config(
     page_icon='🎡',
     )
 
-    # Set the theme
-    st.markdown(f"""
-    <style>
-        .reportview-container {{
-            background-color: {background_color};
-            color: {text_color};
-            font-family: {font};
+# Set the theme
+st.markdown(f"""
+ <style>
+    .reportview-container {{
+    background-color: {background_color};
+    color: {text_color};
+    font-family: {font};
         }}
         .sidebar .sidebar-content {{
             background-color: {header_color};
