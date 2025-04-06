@@ -15,12 +15,12 @@ footer_color = '#017C8C'
 footer_text_color = '#FFFFFF'
 font = 'Arial, sans serif'
 
-    # Set the page config
-    st.set_page_config(
-        page_title='NeuroPlex',
-        layout='wide',
-        initial_sidebar_state='expanded',
-        page_icon='🎡',
+# Set the page config
+st.set_page_config(
+    page_title='NeuroPlex',
+    layout='wide',
+    initial_sidebar_state='expanded',
+    page_icon='🎡',
     )
 
     # Set the theme
