@@ -1,284 +1,122 @@
-# Importing necessary libraries
+# neuroplex_app.py
+
 import streamlit as st
-import requests
 import pandas as pd
 import numpy as np
-from PIL import Image
-import subprocess
-import os
 import base64
-import pickle
 import joblib
-from joblib import dump, load
-import sklearn
-from sklearn import svm
-from sklearn import datasets
-# Set the page configuration (must be the first Streamlit command)
+from rdkit import Chem
+from rdkit.Chem import AllChem
+
+# Load your trained model
+model = joblib.load("model.pkl")  # Make sure this exists in your app folder
+
+# Page config
 st.set_page_config(
     page_title='NeuroPlex',
     layout='wide',
     initial_sidebar_state='expanded',
-    page_icon='֎',
+    page_icon='🧠',
 )
 
-def main():
-    # Set the color scheme
-    header_color = '#E6E6FA'         # Maroon
-    background_color = '#FFFFFF'     # White
-    text_color = '#333333'           # Dark Gray
-    primary_color = '#7A4E9F'        # Darker Maroon
-    footer_color = '#6A4C9C'         # Deep Maroon
-    footer_text_color = '#FFFFFF'    # White
-    font = 'Arial, sans-serif'
-
-    # Set the theme
-    st.markdown(f"""
-    <style>
-        .reportview-container {{
-            background-color: {background_color};
-            color: {text_color};
-            font-family: {font};
-        }}
-        .sidebar .sidebar-content {{
-            background-color: {header_color};
-            color: {text_color};
-        }}
-        .stButton > button {{
-            background-color: {primary_color};
-            color: {background_color};
-            border-radius: 12px;
-            font-size: 16px;
-            padding: 10px 20px;
-        }}
-        footer {{
-            font-family: {font};
-            background-color: {footer_color};
-            color: {footer_text_color};
-        }}
-        .header-title {{
-            color: {primary_color};
-            font-size: 36px;
-            font-weight: bold;
-            text-align: center;
-            margin-top: 20px;
-        }}
-        .header-subtitle {{
-            color: {text_color};
-            font-size: 20px;
-            text-align: center;
-            margin-bottom: 30px;
-        }}
-    </style>
-    """, unsafe_allow_html=True)
- 
- # Add header with application title and description
-with st.container():  # Corrected from 'center' to 'st.container'
-    st.markdown(
-        "<h1 class='header-title'>NeuroPlex – An Artificial Intelligence Approach towards the Drug Discovery based on pIC50 value for Alzheimer's Disease</h1>",
-        unsafe_allow_html=True
-    )
-    st.markdown(
-        """
-        <p class='header-subtitle'>
-       Welcome to NeuroPlex, a powerful prediction server designed to assess the pIC50 values of compounds targeting therapeutically to Alzheimer's Disease. Built on a highly accurate machine learning-based regression model, NeuroPlex achieves an impressive 99% accuracy, enabling precise and reliable predictions. This tool deciphers complex molecular interactions, providing insights into the inhibitory potential of compounds to biomarkers. Join us in advancing drug discovery, unlocking novel therapeutic possibilities against Alzheimer's disease.
-         </p>
-        """,
-        unsafe_allow_html=True
-    )
-    #st.image("erm.jpg", width=800)
-    col1, col2, col3 = st.columns([1,2,3])
-    with col2:
-        st.image("erm.jpg", width=600)
-if __name__ == "__main__":
-    main()
-def main():
-    # Initialize session state variables if not already set
-    if 'page' not in st.session_state:
-        st.session_state.page = 'input'
-    if 'smiles_input' not in st.session_state:
-        st.session_state.smiles_input = ''
-    if 'prediction_df' not in st.session_state:
-        st.session_state.prediction_df = None
-    # Navigation function
-    def navigate_to(page):
-        st.session_state.page = page
-
-    # Input page
-    if st.session_state.page == 'input':
-        st.subheader('pIC50 Prediction')
-
-        # Radio button for input method selection (Unique Key Added)
-        input_method = st.radio(
-            "Choose input method:", 
-            ("Copy and Paste SMILES", "Upload CSV/TXT File"), 
-            key="input_method_radio"
-        )
-
-        if input_method == "Copy and Paste SMILES":
-            st.header('1. Enter SMILES String:')
-            smiles_input = st.text_area("Enter SMILES String here:", "", key="smiles_text_area")
-
-            if st.button('Predict', key="predict_button_text"):
-                if smiles_input:
-                    # Store SMILES input in session state
-                    st.session_state.smiles_input = smiles_input
-
-                    # Perform prediction and store results
-                    st.session_state.prediction_df = handle_prediction(smiles_input)
-
-                    # Navigate to the output page
-                    navigate_to('output')
-                else:
-                    st.warning('Please enter a SMILES string.')
-
-        else:
-            st.header('1. Upload CSV or TXT file containing SMILES:')
-            uploaded_file = st.file_uploader("Upload file", type=["csv", "txt"], key="file_uploader")
-
-            if st.button('Predict', key="predict_button_file"):
-                if uploaded_file is not None:
-                    # Read the uploaded file
-                    smiles_df = pd.read_csv(uploaded_file)
-                    smiles_input = '\n'.join(smiles_df.iloc[:, 0].astype(str))
-
-                    # Store SMILES input in session state
-                    st.session_state.smiles_input = smiles_input
-
-                    # Perform prediction and store results
-                    st.session_state.prediction_df = handle_prediction(smiles_input)
-
-                    # Navigate to the output page
-                    navigate_to('output')
-                else:
-                    st.warning('Please upload a valid file.')
-
-    # Output page
-    elif st.session_state.page == 'output':
-        st.subheader('Prediction Results')
-
-        if st.session_state.prediction_df is not None:
-            st.dataframe(st.session_state.prediction_df)
-
-            # Download option
-            st.markdown(filedownload(st.session_state.prediction_df), unsafe_allow_html=True)
-
-            if st.button('Go Back', key="go_back_button"):
-                navigate_to('input')
-        else:
-            st.error("No prediction data available. Please go back and provide input.")
-
-# Descriptor Calculation Function
-def desc_calc(smiles_input):
-    try:
-        bashCommand = f"your_command_here {smiles_input}"  # Ensure this is correct
-        process = subprocess.run(bashCommand, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, check=True)
-        
-        if process.returncode != 0:
-            st.error(f"Error in descriptor calculation: {process.stderr}")
-            return None
-        
-        return process.stdout.strip()
-    except subprocess.CalledProcessError as e:
-        st.error(f"Subprocess error: {e}")
+# ---------- Utility Functions ----------
+def smiles_to_morgan_fp(smiles, radius=2, nBits=2048):
+    mol = Chem.MolFromSmiles(smiles)
+    if mol is None:
         return None
-    except Exception as e:
-        st.error(f"Unexpected error: {str(e)}")
-        return None
-# File download function
-def filedownload(df):
+    return np.array(AllChem.GetMorganFingerprintAsBitVect(mol, radius, nBits))
+
+def predict_from_smiles(smiles_list):
+    predictions = []
+    for smi in smiles_list:
+        fp = smiles_to_morgan_fp(smi)
+        if fp is None:
+            predictions.append((smi, None, "Invalid SMILES"))
+        else:
+            pIC50 = model.predict([fp])[0]
+            if pIC50 >= 6:
+                activity = "Active"
+            elif pIC50 >= 5:
+                activity = "Intermediate"
+            else:
+                activity = "Inactive"
+            predictions.append((smi, round(pIC50, 2), activity))
+    return pd.DataFrame(predictions, columns=["SMILES", "Predicted pIC50", "Bioactivity Class"])
+
+def download_link(df):
     csv = df.to_csv(index=False)
     b64 = base64.b64encode(csv.encode()).decode()
-    href = f'<a href="data:file/csv;base64,{b64}" download="prediction.csv">Download Predictions</a>'
-    return href
+    return f'<a href="data:file/csv;base64,{b64}" download="predictions.csv">📥 Download Results</a>'
 
-# Model prediction function
-def build_model(input_data, smiles_list):
-    load_model = pickle.load(open('model.pkl', 'rb'))
-    prediction = load_model.predict(input_data)
-    df = pd.DataFrame({
-        'Canonical Smiles': smiles_list,
-        'pIC50 values': prediction
-    })
-    df_sorted = df.sort_values(by='pIC50 values', ascending=False).reset_index(drop=True)
-    df_sorted.index += 1
-    return df_sorted
+# ---------- UI Components ----------
+def show_header():
+    st.markdown("""
+        <h1 style='text-align: center; color: #7A4E9F;'>🧬 NeuroPlex – AI-Driven Drug Discovery</h1>
+        <p style='text-align: center; font-size: 16px;'>
+        Predict pIC₅₀ values and bioactivity classes of potential drug candidates for Alzheimer's Disease.
+        </p>
+    """, unsafe_allow_html=True)
 
-# Function to handle SMILES input and prediction
-def handle_prediction(smiles_input):
-    desc_result = desc_calc(smiles_input)
-    if desc_result is None:
-        return None
-    
-    try:
-        prediction_df = pd.DataFrame({'SMILES': [smiles_input], 'Prediction': [desc_result]})
-        return prediction_df
-    except Exception as e:
-        st.error(f"Error in processing prediction: {str(e)}")
-        return None
+def show_team():
+    st.markdown("### 👨‍🔬 Team NeuroPlex")
+    col1, col2, col3 = st.columns(3)
+
+    with col1:
+        st.markdown("""
+        **Dr. Kashif Iqbal Sahibzada**  
+        Assistant Professor, DHPT, UOL  
+        Post-Doctoral Fellow, HAUT China  
+        📧 kashif.iqbal@dhpt.uol.edu.pk
+        """)
+
+    with col2:
+        st.markdown("""
+        **Dr. Andleeb Batool**  
+        Assistant Professor, Dept. of Zoology, GCU Lahore  
+        📧 andleeb.batool@gcu.edu.pk
+        """)
+
+    with col3:
+        st.markdown("""
+        **Shumaila Shahid**  
+        MS Biochemistry, SBB, PU Lahore  
+        📧 shumaila.ms.sbb@pu.edu.pk
+        """)
+
+# ---------- Main App ----------
+def main():
+    show_header()
+
+    st.markdown("### 🔍 Enter SMILES")
+    input_method = st.radio("Input Method", ["Paste SMILES", "Upload File"])
+
+    if input_method == "Paste SMILES":
+        smiles_text = st.text_area("Enter one or more SMILES (one per line):")
+        if st.button("Predict"):
+            smiles_list = [s.strip() for s in smiles_text.strip().split("\n") if s.strip()]
+            if not smiles_list:
+                st.warning("Please enter at least one valid SMILES.")
+                return
+            result_df = predict_from_smiles(smiles_list)
+            st.success("✅ Prediction completed.")
+            st.dataframe(result_df)
+            st.markdown(download_link(result_df), unsafe_allow_html=True)
+
+    else:  # Upload file
+        uploaded_file = st.file_uploader("Upload a CSV or TXT file with SMILES", type=["csv", "txt"])
+        if uploaded_file and st.button("Predict"):
+            try:
+                df = pd.read_csv(uploaded_file, header=None)
+                smiles_list = df.iloc[:, 0].dropna().astype(str).tolist()
+                result_df = predict_from_smiles(smiles_list)
+                st.success("✅ Prediction completed.")
+                st.dataframe(result_df)
+                st.markdown(download_link(result_df), unsafe_allow_html=True)
+            except Exception as e:
+                st.error(f"❌ Error reading file: {e}")
+
+    st.markdown("---")
+    show_team()
 
 if __name__ == "__main__":
     main()
-
- 
-# HTML and CSS to color the title and header
-st.markdown(
-    """
-    <style>
-    .title {
-        color: #7A4E9F;  /* Parrot Green color code */
-        font-size: 2em;
-        font-weight: bold;
-    }
-    .header {
-        color: #7A4E9F;  /* Parrot Green color code */
-        font-size: 1.5em;
-        font-weight: bold;
-    }
-    </style>
-    <h1 class="title">Team NeuroPlex:</h1>
-    """,
-    unsafe_allow_html=True
-)
- 
-# Define columns for the profiles
-col1, col2, col3 = st.columns([1, 1, 1])
-
-with col1:
-    # st.image("my-photo.jpg", width=100)
-    st.markdown("""
-        <div style='line-height: 1.1;'>
-            <h3>Dr. Kashif Iqbal Sahibzada</h3>
-             Assistant Professor | Department of Health Professional Technologies, Faculty of Allied Health Sciences, The University of Lahore<br>
-            Post-Doctoral Fellow | Henan University of Technology,Zhengzhou China<br>
-            Email: kashif.iqbal@dhpt.uol.edu.pk | kashif.iqbal@haut.edu.cn
-        </div>
-    """, unsafe_allow_html=True)
-
-with col2:
-    # st.image("colleague-photo.jpg", width=100)
-    st.markdown("""
-        <div style='line-height: 1.1;'>
-            <h3>Dr. Andleeb Batool</h3>
-            Assistant Professor | Department of Zoology<br>
-            Government College University, Lahore<br>
-            Email: andleeb.batool@gcu.edu.pk
-        </div>
-    """, unsafe_allow_html=True)
-
-with col3:
-    # st.image("teacher-photo.jpg", width=100)
-    st.markdown("""
-        <div style='line-height: 1.1;'>
-            <h3>Shumaila Shahid</h3>
-            MS Biochemistry<br>
-            School of Biochemistry and Biotechnology<br>
-            University of the Punjab, Lahore<br>
-            Email: shumaila.ms.sbb@pu.edu.pk
-        </div>
-    """, unsafe_allow_html=True)
-
-#Add University Logo
-left_logo, center_left, center_right, right_logo = st.columns([1, 1, 1, 1])
-#left_logo.image("LOGO_u.jpeg", width=200)
-center_left.image("uol.jpg", width=450)  # Replace with your center-left logo image
-#right_logo.image("image.jpg", width=200)
