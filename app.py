@@ -1,5 +1,4 @@
-# neuroplex_app.py
-
+# app.py
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -8,31 +7,25 @@ import joblib
 from rdkit import Chem
 from rdkit.Chem import AllChem
 
-# Load your trained model
-model = joblib.load("model2.pkl")  # Make sure this exists in your app folder
+# Load the model (after retraining with train_model.py)
+model = joblib.load("model.pkl")
 
-# Page config
-st.set_page_config(
-    page_title='NeuroPlex',
-    layout='wide',
-    initial_sidebar_state='expanded',
-    page_icon='🧠',
-)
+# Page configuration
+st.set_page_config(page_title='NeuroPlex', layout='wide', page_icon='🧠')
 
-# ---------- Utility Functions ----------
+# Utility to convert SMILES to Morgan fingerprint
 def smiles_to_morgan_fp(smiles, radius=2, nBits=2048):
     mol = Chem.MolFromSmiles(smiles)
-    if mol is None:
-        return None
-    return np.array(AllChem.GetMorganFingerprintAsBitVect(mol, radius, nBits))
+    if mol:
+        return np.array(AllChem.GetMorganFingerprintAsBitVect(mol, radius, nBits))
+    return None
 
+# Predict pIC50 and classify
 def predict_from_smiles(smiles_list):
-    predictions = []
+    results = []
     for smi in smiles_list:
         fp = smiles_to_morgan_fp(smi)
-        if fp is None:
-            predictions.append((smi, None, "Invalid SMILES"))
-        else:
+        if fp is not None:
             pIC50 = model.predict([fp])[0]
             if pIC50 >= 6:
                 activity = "Active"
@@ -40,80 +33,60 @@ def predict_from_smiles(smiles_list):
                 activity = "Intermediate"
             else:
                 activity = "Inactive"
-            predictions.append((smi, round(pIC50, 2), activity))
-    return pd.DataFrame(predictions, columns=["SMILES", "Predicted pIC50", "Bioactivity Class"])
+            results.append((smi, round(pIC50, 2), activity))
+        else:
+            results.append((smi, None, "Invalid SMILES"))
+    return pd.DataFrame(results, columns=["SMILES", "Predicted pIC50", "Bioactivity Class"])
 
+# CSV download helper
 def download_link(df):
     csv = df.to_csv(index=False)
     b64 = base64.b64encode(csv.encode()).decode()
-    return f'<a href="data:file/csv;base64,{b64}" download="predictions.csv">📥 Download Results</a>'
+    return f'<a href="data:file/csv;base64,{b64}" download="predictions.csv">📥 Download CSV</a>'
 
-# ---------- UI Components ----------
-def show_header():
-    st.markdown("""
-        <h1 style='text-align: center; color: #7A4E9F;'>🧬 NeuroPlex – AI-Driven Drug Discovery</h1>
-        <p style='text-align: center; font-size: 16px;'>
-        Predict pIC₅₀ values and bioactivity classes of potential drug candidates for Alzheimer's Disease.
-        </p>
-    """, unsafe_allow_html=True)
-
-def show_team():
-    st.markdown("### 👨‍🔬 Team NeuroPlex")
-    col1, col2, col3 = st.columns(3)
-
-    with col1:
-        st.markdown("""
-        **Dr. Kashif Iqbal Sahibzada**  
-        Assistant Professor, DHPT, UOL  
-        Post-Doctoral Fellow, HAUT China  
-        📧 kashif.iqbal@dhpt.uol.edu.pk
-        """)
-
-    with col2:
-        st.markdown("""
-        **Dr. Andleeb Batool**  
-        Assistant Professor, Dept. of Zoology, GCU Lahore  
-        📧 andleeb.batool@gcu.edu.pk
-        """)
-
-    with col3:
-        st.markdown("""
-        **Shumaila Shahid**  
-        MS Biochemistry, SBB, PU Lahore  
-        📧 shumaila.ms.sbb@pu.edu.pk
-        """)
-
-# ---------- Main App ----------
+# App UI
 def main():
-    show_header()
+    st.markdown("<h1 style='text-align: center; color: #7A4E9F;'>🧬 NeuroPlex</h1>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align: center;'>AI-based pIC₅₀ prediction for Alzheimer's drug discovery</p>", unsafe_allow_html=True)
 
-    st.markdown("### 🔍 Enter SMILES")
     input_method = st.radio("Input Method", ["Paste SMILES", "Upload File"])
 
     if input_method == "Paste SMILES":
-        smiles_text = st.text_area("Enter one or more SMILES (one per line):")
+        smiles_text = st.text_area("Enter SMILES (one per line)")
         if st.button("Predict"):
-            smiles_list = [s.strip() for s in smiles_text.strip().split("\n") if s.strip()]
+            smiles_list = [s.strip() for s in smiles_text.strip().splitlines() if s.strip()]
             if not smiles_list:
-                st.warning("Please enter at least one valid SMILES.")
-                return
-            result_df = predict_from_smiles(smiles_list)
-            st.success("✅ Prediction completed.")
-            st.dataframe(result_df)
-            st.markdown(download_link(result_df), unsafe_allow_html=True)
+                st.warning("Please enter valid SMILES.")
+            else:
+                results = predict_from_smiles(smiles_list)
+                st.success("✅ Predictions ready!")
+                st.dataframe(results)
+                st.markdown(download_link(results), unsafe_allow_html=True)
 
-    else:  # Upload file
-        uploaded_file = st.file_uploader("Upload a CSV or TXT file with SMILES", type=["csv", "txt"])
-        if uploaded_file and st.button("Predict"):
+    else:
+        uploaded = st.file_uploader("Upload CSV or TXT", type=["csv", "txt"])
+        if uploaded and st.button("Predict"):
             try:
-                df = pd.read_csv(uploaded_file, header=None)
+                df = pd.read_csv(uploaded, header=None)
                 smiles_list = df.iloc[:, 0].dropna().astype(str).tolist()
-                result_df = predict_from_smiles(smiles_list)
-                st.success("✅ Prediction completed.")
-                st.dataframe(result_df)
-                st.markdown(download_link(result_df), unsafe_allow_html=True)
+                results = predict_from_smiles(smiles_list)
+                st.success("✅ Predictions ready!")
+                st.dataframe(results)
+                st.markdown(download_link(results), unsafe_allow_html=True)
             except Exception as e:
-                st.error(f"❌ Error reading file: {e}")
+                st.error(f"Error: {e}")
+
+    st.markdown("---")
+    st.markdown("#### 👨‍🔬 Team NeuroPlex")
+    st.markdown("""
+    - **Dr. Kashif Iqbal Sahibzada** – UOL, Pakistan & HAUT, China  
+    - **Dr. Andleeb Batool** – GCU, Lahore  
+    - **Shumaila Shahid** – PU, Lahore
+    """)
+
+if __name__ == "__main__":
+    main()
+
 
     st.markdown("---")
     show_team()
