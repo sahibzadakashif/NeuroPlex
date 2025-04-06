@@ -92,7 +92,7 @@ def main():
     colA, colB = st.columns(2)
     with colA:
         st.image("image.png", use_column_width=True)
-   with colB:
+   #with colB:
         #st.image("image2.png", use_column_width=True)
 
     st.markdown("""
