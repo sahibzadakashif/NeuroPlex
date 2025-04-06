@@ -7,13 +7,13 @@ import joblib
 from rdkit import Chem
 from rdkit.Chem import AllChem
     # Set the color scheme
-    header_color = '#91C788'
-    background_color = '#FFFFFF'
-    text_color = '#333333'
-    primary_color = '#800000'
-    footer_color = '#017C8C'
-    footer_text_color = '#FFFFFF'
-    font = 'Arial, sans serif'
+header_color = '#91C788'
+background_color = '#FFFFFF'
+text_color = '#333333'
+primary_color = '#800000'
+footer_color = '#017C8C'
+footer_text_color = '#FFFFFF'
+font = 'Arial, sans serif'
 
     # Set the page config
     st.set_page_config(
