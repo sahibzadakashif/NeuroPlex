@@ -76,11 +76,11 @@ def main():
         st.image("erm.jpg", width=580)
     with col3:
          st.markdown("<h1 class='header-title'>NeuroPlex – An Artificial Intelligence Approach towards the Drug Discovery based on pIC50 value for Alzheimer's Disease</h1>", unsafe_allow_html=True)
-        st.markdown("""
-        <p class='header-subtitle'>
-        Welcome to NeuroPlex, a powerful prediction server designed to assess the pIC50 values of compounds targeting therapeutically to Alzheimer's Disease. Built on a highly accurate machine learning-based regression model, NeuroPlex achieves an impressive 99% accuracy, enabling precise and reliable predictions. This tool deciphers complex molecular interactions, providing insights into the inhibitory potential of compounds to biomarkers. Join us in advancing drug discovery, unlocking novel therapeutic possibilities against Alzheimer's disease.
-        </p>
-        """, unsafe_allow_html=True)
+         st.markdown("""
+         <p class='header-subtitle'>
+         Welcome to NeuroPlex, a powerful prediction server designed to assess the pIC50 values of compounds targeting therapeutically to Alzheimer's Disease. Built on a highly accurate machine learning-based regression model, NeuroPlex achieves an impressive 99% accuracy, enabling precise and reliable predictions. This tool deciphers complex molecular interactions, providing insights into the inhibitory potential of compounds to biomarkers. Join us in advancing drug discovery, unlocking novel therapeutic possibilities against Alzheimer's disease.
+         </p>
+         """, unsafe_allow_html=True)
 
 if __name__ == "__main__":
     main()
