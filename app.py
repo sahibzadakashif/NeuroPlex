@@ -62,9 +62,9 @@ def main():
     
     
     # Add university logos to the page
-    left_logo, center, right_logo = st.columns([1, 2, 1])
-    left_logo.image("PU.png", width=280)
-    right_logo.image("LOGO_u.png", width=280)
+    #left_logo, center, right_logo = st.columns([1, 2, 1])
+    #left_logo.image("PU.png", width=280)
+    #right_logo.image("LOGO_u.png", width=280)
 
     # Add header with application title and description
     with center:
@@ -129,7 +129,7 @@ if __name__ == "__main__":
 # Function to calculate IC50 value
 def calculate_ic50(smiles):
     # Load the machine learning model
-    model_file = "model(1).pkl"
+    model_file = "model2.pkl"
     model = joblib.load(model_file)
 
     # Calculate molecular descriptors using RDKit
