@@ -18,7 +18,7 @@ st.set_page_config(
     page_title='NeuroPlex',
     layout='wide',
     initial_sidebar_state='expanded',
-    page_icon='ﮩـﮩﮩ٨ـ🧠🫀ﮩﮩ٨ـ',
+    page_icon='֎',
 )
 
 def main():
