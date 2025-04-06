@@ -62,17 +62,17 @@ st.markdown(f"""
         }}
     </style>
     """, unsafe_allow_html=True)
-     # Add the image and title at the top of the page
-    col1, col2, col3 = st.columns([1,2,3])
-    with col1:
-        st.image("image.png", width=580)
-    with col3:
-        st.markdown("<h1 class='header-title'>NeuroPlex – An Innovative Approach towards Alzheimer Therapeutics</h1>", unsafe_allow_html=True)
-        st.markdown("""
-        <p class='header-subtitle'>
-       Welcome to NeuroPlex, a cutting-edge prediction platform designed to accelerate drug discovery for Alzheimer’s Disease. Powered by an advanced machine learning-based regression model, NeuroPlex delivers an outstanding 99% prediction accuracy for pIC₅₀ values, enabling researchers to evaluate the inhibitory potential of compounds with exceptional precision. This intelligent tool deciphers complex molecular interactions and provides deep insights into compound bioactivity, making it an invaluable asset in targeting key biomarkers associated with Alzheimer’s pathology. Whether you're optimizing lead molecules or screening novel candidates, NeuroPlex empowers you to make data-driven decisions with confidence, opening new avenues for therapeutic breakthroughs against Alzheimer’s Disease.
-        </p>
-        """, unsafe_allow_html=True)
+    # Add the image and title at the top of the page
+col1, col2, col3 = st.columns([1,2,3])
+with col1:
+    st.image("image.png", width=580)
+with col3:
+    st.markdown("<h1 class='header-title'>NeuroPlex – An Innovative Approach towards Alzheimer Therapeutics</h1>", unsafe_allow_html=True)
+    st.markdown("""
+    <p class='header-subtitle'>
+    Welcome to NeuroPlex, a cutting-edge prediction platform designed to accelerate drug discovery for Alzheimer’s Disease. Powered by an advanced machine learning-based regression model, NeuroPlex delivers an outstanding 99% prediction accuracy for pIC₅₀ values, enabling researchers to evaluate the inhibitory potential of compounds with exceptional precision. This intelligent tool deciphers complex molecular interactions and provides deep insights into compound bioactivity, making it an invaluable asset in targeting key biomarkers associated with Alzheimer’s pathology. Whether you're optimizing lead molecules or screening novel candidates, NeuroPlex empowers you to make data-driven decisions with confidence, opening new avenues for therapeutic breakthroughs against Alzheimer’s Disease.
+    </p>
+    """, unsafe_allow_html=True)
 # Add university logos to the page
     left_logo, center, right_logo = st.columns([1, 2, 1])
     center.image("alzheimer.png", width=650)
