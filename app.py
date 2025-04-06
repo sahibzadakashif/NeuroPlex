@@ -15,19 +15,19 @@ from sklearn import svm
 from sklearn import datasets
 # Set the page configuration (must be the first Streamlit command)
 st.set_page_config(
-    page_title='PharmacoGenix',
+    page_title='NeuroPlex',
     layout='wide',
     initial_sidebar_state='expanded',
-    page_icon='💊',
+    page_icon='ﮩـﮩﮩ٨ـ🧠🫀ﮩﮩ٨ـ',
 )
 
 def main():
     # Set the color scheme
-    header_color = '#800000'         # Maroon
+    header_color = '#E6E6FA'         # Maroon
     background_color = '#FFFFFF'     # White
     text_color = '#333333'           # Dark Gray
-    primary_color = '#A52A2A'        # Darker Maroon
-    footer_color = '#550000'         # Deep Maroon
+    primary_color = '#7A4E9F'        # Darker Maroon
+    footer_color = '#6A4C9C'         # Deep Maroon
     footer_text_color = '#FFFFFF'    # White
     font = 'Arial, sans-serif'
 
@@ -74,13 +74,13 @@ def main():
    # Add header with application title and description
 with st.container():  # Corrected from 'center' to 'st.container'
     st.markdown(
-        "<h1 class='header-title'>PharmacoGenix – An Artificial Intelligence Approach towards the Drug Discovery</h1>",
+        "<h1 class='header-title'>NeuroPlex – An Artificial Intelligence Approach towards the Drug Discovery based on pIC50 value for Alzheimer's Disease</h1>",
         unsafe_allow_html=True
     )
     st.markdown(
         """
         <p class='header-subtitle'>
-        Welcome to PharmacoGenix, a powerful prediction server designed to assess the pIC50 values of compounds targeting Ribosome Methyltransferase (erm 41). Built on a highly accurate machine learning-based regression model, PharmacoGenix achieves an impressive 99% accuracy, enabling precise and reliable predictions. This tool deciphers complex molecular interactions, providing insights into the inhibitory potential of phytochemicals, microbial peptides, archaeal peptides, and synthetic ligands. Join us in advancing antimicrobial research, unlocking novel therapeutic possibilities against ribosomal resistance mechanisms.
+        Welcome to NeuroPlex, a powerful prediction server designed to assess the pIC50 values of compounds targeting therapeutically to Alzheimer's Disease. Built on a highly accurate machine learning-based regression model, NeuroPlex achieves an impressive 99% accuracy, enabling precise and reliable predictions. This tool deciphers complex molecular interactions, providing insights into the inhibitory potential of compounds to biomarkers. Join us in advancing drug discovery, unlocking novel therapeutic possibilities against Alzheimer's disease.
         </p>
         """,
         unsafe_allow_html=True
@@ -226,17 +226,17 @@ st.markdown(
     """
     <style>
     .title {
-        color: #800000;  /* Parrot Green color code */
+        color: #E6E6FA;  /* Parrot Green color code */
         font-size: 2em;
         font-weight: bold;
     }
     .header {
-        color: #800000;  /* Parrot Green color code */
+        color: #E6E6FA;  /* Parrot Green color code */
         font-size: 1.5em;
         font-weight: bold;
     }
     </style>
-    <h1 class="title">Team PharmacoGenix:</h1>
+    <h1 class="title">Team NeuroPlex:</h1>
     """,
     unsafe_allow_html=True
 )
@@ -259,10 +259,9 @@ with col2:
     # st.image("colleague-photo.jpg", width=100)
     st.markdown("""
         <div style='line-height: 1.1;'>
-            <h3>Munawar Abbas</h3>
-            PhD Scholar<br>
-            Henan University of Technology,Zhengzhou China<br>
-            Email: abbas@stu.haut.edu.cn
+            <h3>Dr. Andleeb Batool</h3>
+            Assistant Professor | Department of Zoology, GCU, Lahore<br>
+            Email: andleeb.batool@gcu.edu.pk
         </div>
     """, unsafe_allow_html=True)
 
