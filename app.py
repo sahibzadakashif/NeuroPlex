@@ -1,43 +1,36 @@
-
-
+# Importing necessary libraries
 import streamlit as st
 import requests
 import pandas as pd
 import numpy as np
-from rdkit import Chem
-from rdkit.Chem import AllChem
-from rdkit.Chem import AllChem, rdMolAlign
-from rdkit.Chem import Descriptors, Lipinski
-from rdkit import DataStructs
-from rdkit.Chem import RDKFingerprint
-from rdkit.Chem import PandasTools
-from Bio import SeqIO
+from PIL import Image
+import subprocess
+import os
+import base64
+import pickle
 import joblib
 from joblib import dump, load
-import pickle 
 import sklearn
 from sklearn import svm
 from sklearn import datasets
-from sklearn.ensemble import RandomForestRegressor
-import rcsbsearchapi
-import os
+# Set the page configuration (must be the first Streamlit command)
+st.set_page_config(
+    page_title='PharmacoGenix',
+    layout='wide',
+    initial_sidebar_state='expanded',
+    page_icon='💊',
+)
 
 def main():
     # Set the color scheme
-    primary_color = '#4863A0'
-    secondary_color = '#4169E1'
-    tertiary_color = '#368BC1'
-    background_color = '#F5F5F5'
-    text_color = '#004225'
-    font = 'sans serif'
+    header_color = '#800000'         # Maroon
+    background_color = '#FFFFFF'     # White
+    text_color = '#333333'           # Dark Gray
+    primary_color = '#A52A2A'        # Darker Maroon
+    footer_color = '#550000'         # Deep Maroon
+    footer_text_color = '#FFFFFF'    # White
+    font = 'Arial, sans-serif'
 
-    # Set the page config
-    st.set_page_config(
-        page_title='Drug Predictor Pro',
-        layout= 'wide',
-        initial_sidebar_state='expanded'
-    )
-    
     # Set the theme
     st.markdown(f"""
     <style>
@@ -47,122 +40,246 @@ def main():
             font-family: {font};
         }}
         .sidebar .sidebar-content {{
-            background-color: {secondary_color};
-            color: {tertiary_color};
+            background-color: {header_color};
+            color: {text_color};
         }}
-        .streamlit-button {{
+        .stButton > button {{
             background-color: {primary_color};
-            color: {tertiary_color};
+            color: {background_color};
+            border-radius: 12px;
+            font-size: 16px;
+            padding: 10px 20px;
         }}
         footer {{
             font-family: {font};
+            background-color: {footer_color};
+            color: {footer_text_color};
+        }}
+        .header-title {{
+            color: {primary_color};
+            font-size: 36px;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 20px;
+        }}
+        .header-subtitle {{
+            color: {text_color};
+            font-size: 20px;
+            text-align: center;
+            margin-bottom: 30px;
         }}
     </style>
     """, unsafe_allow_html=True)
-    
-    
-    # Add university logos to the page
-    #left_logo, center, right_logo = st.columns([1, 2, 1])
-    #left_logo.image("PU.png", width=280)
-    #right_logo.image("LOGO_u.png", width=280)
 
-    # Add header with application title and description
-    with center:
-      st.markdown("<h1 style='font-family:Bodoni MT Black;font-size:40px;'>Drug Predictor Pro</h1>", unsafe_allow_html=True)
-      st.write("")
-      st.markdown("<p style='font-family:Bodoni MT;font-size:20px;font-style: italic;'>Unlock the power of predictive analytics with Drug Predictor Pro, your cutting edge machine learning app designed to revolutionize healthcare by forecasting optimal drug responses for personalized treatment plans.</p>", unsafe_allow_html=True)
+   # Add header with application title and description
+with st.container():  # Corrected from 'center' to 'st.container'
+    st.markdown(
+        "<h1 class='header-title'>PharmacoGenix – An Artificial Intelligence Approach towards the Drug Discovery</h1>",
+        unsafe_allow_html=True
+    )
+    st.markdown(
+        """
+        <p class='header-subtitle'>
+        Welcome to PharmacoGenix, a powerful prediction server designed to assess the pIC50 values of compounds targeting Ribosome Methyltransferase (erm 41). Built on a highly accurate machine learning-based regression model, PharmacoGenix achieves an impressive 99% accuracy, enabling precise and reliable predictions. This tool deciphers complex molecular interactions, providing insights into the inhibitory potential of phytochemicals, microbial peptides, archaeal peptides, and synthetic ligands. Join us in advancing antimicrobial research, unlocking novel therapeutic possibilities against ribosomal resistance mechanisms.
+        </p>
+        """,
+        unsafe_allow_html=True
+    )
+    #st.image("erm.jpg", width=800)
+    col1, col2, col3 = st.columns([1,2,3])
+    with col2:
+        st.image("erm.jpg", width=800)
 
 if __name__ == "__main__":
-    main()  
-
-
-def calculate_lipinski(smiles_list):
-    data = []
-    for smiles in smiles_list:
-        mol = Chem.MolFromSmiles(smiles)
-        if mol is not None:
-            row = {
-                "SMILES": smiles,
-                "MW": Descriptors.MolWt(mol),
-                "LogP": Descriptors.MolLogP(mol),
-                "NumHDonors": Descriptors.NumHDonors(mol),
-                "NumHAcceptors": Descriptors.NumHAcceptors(mol)
-            }
-            data.append(row)
-        else:
-            st.warning(f"Invalid SMILES: {smiles}")
-    return pd.DataFrame(data)
-
+    main()
 def main():
-    st.title("Drug Predictor Pro")
-    st.header("Lipinski Descriptors Calculator")
-    
-    # Input widgets
-    option = st.radio("Select input method:", ("Enter SMILES", "Upload SMILES from CSV"), key="input_method")
-    if option == "Enter SMILES":
-        smiles_input = st.text_area("Enter SMILES notation (separate by newline)", key="smiles_input")
-        smiles_list = smiles_input.split('\n')
-    else:
-        smiles_csv_file = st.file_uploader("Upload smiles.csv file", type=["csv"], key="file_uploader")
-        if smiles_csv_file is not None:
-            df = pd.read_csv(smiles_csv_file)
-            if 'SMILES' in df.columns:
-                smiles_list = df['SMILES'].tolist()
-            else:
-                st.error("SMILES column not found in the uploaded CSV file.")
-                return
-        else:
-            st.warning("Please upload a CSV file.")
+    # Initialize session state variables if not already set
+    if 'page' not in st.session_state:
+        st.session_state.page = 'input'
+    if 'smiles_input' not in st.session_state:
+        st.session_state.smiles_input = ''
+    if 'prediction_df' not in st.session_state:
+        st.session_state.prediction_df = None
+    # Navigation function
+    def navigate_to(page):
+        st.session_state.page = page
 
-    calculate_button = st.button("Calculate Lipinski Descriptors", key="calculate_button")
-    if calculate_button:
-        if not smiles_list:
-            st.warning("Please enter SMILES or upload a CSV file.")
-            return
-        lipinski_descriptors = calculate_lipinski(smiles_list)
-        st.write("Lipinski Descriptors:")
-        st.write(lipinski_descriptors)
+    # Input page
+    if st.session_state.page == 'input':
+        st.subheader('pIC50 Prediction')
+
+        # Radio button for input method selection (Unique Key Added)
+        input_method = st.radio(
+            "Choose input method:", 
+            ("Copy and Paste SMILES", "Upload CSV/TXT File"), 
+            key="input_method_radio"
+        )
+
+        if input_method == "Copy and Paste SMILES":
+            st.header('1. Enter SMILES String:')
+            smiles_input = st.text_area("Enter SMILES String here:", "", key="smiles_text_area")
+
+            if st.button('Predict', key="predict_button_text"):
+                if smiles_input:
+                    # Store SMILES input in session state
+                    st.session_state.smiles_input = smiles_input
+
+                    # Perform prediction and store results
+                    st.session_state.prediction_df = handle_prediction(smiles_input)
+
+                    # Navigate to the output page
+                    navigate_to('output')
+                else:
+                    st.warning('Please enter a SMILES string.')
+
+        else:
+            st.header('1. Upload CSV or TXT file containing SMILES:')
+            uploaded_file = st.file_uploader("Upload file", type=["csv", "txt"], key="file_uploader")
+
+            if st.button('Predict', key="predict_button_file"):
+                if uploaded_file is not None:
+                    # Read the uploaded file
+                    smiles_df = pd.read_csv(uploaded_file)
+                    smiles_input = '\n'.join(smiles_df.iloc[:, 0].astype(str))
+
+                    # Store SMILES input in session state
+                    st.session_state.smiles_input = smiles_input
+
+                    # Perform prediction and store results
+                    st.session_state.prediction_df = handle_prediction(smiles_input)
+
+                    # Navigate to the output page
+                    navigate_to('output')
+                else:
+                    st.warning('Please upload a valid file.')
+
+    # Output page
+    elif st.session_state.page == 'output':
+        st.subheader('Prediction Results')
+
+        if st.session_state.prediction_df is not None:
+            st.dataframe(st.session_state.prediction_df)
+
+            # Download option
+            st.markdown(filedownload(st.session_state.prediction_df), unsafe_allow_html=True)
+
+            if st.button('Go Back', key="go_back_button"):
+                navigate_to('input')
+        else:
+            st.error("No prediction data available. Please go back and provide input.")
+
+# Descriptor Calculation Function
+def desc_calc(smiles_input):
+    try:
+        bashCommand = f"your_command_here {smiles_input}"  # Ensure this is correct
+        process = subprocess.run(bashCommand, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, check=True)
+        
+        if process.returncode != 0:
+            st.error(f"Error in descriptor calculation: {process.stderr}")
+            return None
+        
+        return process.stdout.strip()
+    except subprocess.CalledProcessError as e:
+        st.error(f"Subprocess error: {e}")
+        return None
+    except Exception as e:
+        st.error(f"Unexpected error: {str(e)}")
+        return None
+# File download function
+def filedownload(df):
+    csv = df.to_csv(index=False)
+    b64 = base64.b64encode(csv.encode()).decode()
+    href = f'<a href="data:file/csv;base64,{b64}" download="prediction.csv">Download Predictions</a>'
+    return href
+
+# Model prediction function
+def build_model(input_data, smiles_list):
+    load_model = pickle.load(open('model.pkl', 'rb'))
+    prediction = load_model.predict(input_data)
+    df = pd.DataFrame({
+        'Canonical Smiles': smiles_list,
+        'pIC50 values': prediction
+    })
+    df_sorted = df.sort_values(by='pIC50 values', ascending=False).reset_index(drop=True)
+    df_sorted.index += 1
+    return df_sorted
+
+# Function to handle SMILES input and prediction
+def handle_prediction(smiles_input):
+    desc_result = desc_calc(smiles_input)
+    if desc_result is None:
+        return None
+    
+    try:
+        prediction_df = pd.DataFrame({'SMILES': [smiles_input], 'Prediction': [desc_result]})
+        return prediction_df
+    except Exception as e:
+        st.error(f"Error in processing prediction: {str(e)}")
+        return None
 
 if __name__ == "__main__":
     main()
 
-# Function to calculate IC50 value
-def calculate_ic50(smiles):
-    # Load the machine learning model
-    model_file = "model2.pkl"
-    model = joblib.load(model_file)
+ 
+# HTML and CSS to color the title and header
+st.markdown(
+    """
+    <style>
+    .title {
+        color: #800000;  /* Parrot Green color code */
+        font-size: 2em;
+        font-weight: bold;
+    }
+    .header {
+        color: #800000;  /* Parrot Green color code */
+        font-size: 1.5em;
+        font-weight: bold;
+    }
+    </style>
+    <h1 class="title">Team PharmacoGenix:</h1>
+    """,
+    unsafe_allow_html=True
+)
+ 
+# Define columns for the profiles
+col1, col2, col3 = st.columns([1, 1, 1])
 
-    # Calculate molecular descriptors using RDKit
-    mol = Chem.MolFromSmiles(smiles)
-    if mol is None:
-        return "Invalid SMILES"
-    
-    features = []
-    for descriptor in Descriptors.descList:
-        try:
-            features.append(descriptor[1](mol))
-        except:
-            features.append(np.nan)
+with col1:
+    # st.image("my-photo.jpg", width=100)
+    st.markdown("""
+        <div style='line-height: 1.1;'>
+            <h3>Dr. Kashif Iqbal Sahibzada</h3>
+             Assistant Professor | Department of Health Professional Technologies, Faculty of Allied Health Sciences, The University of Lahore<br>
+            Post-Doctoral Fellow | Henan University of Technology,Zhengzhou China<br>
+            Email: kashif.iqbal@dhpt.uol.edu.pk | kashif.iqbal@haut.edu.cn
+        </div>
+    """, unsafe_allow_html=True)
 
-    # Predict pIC50 value
-    pIC50_prediction = model.predict([features])[0]
+with col2:
+    # st.image("colleague-photo.jpg", width=100)
+    st.markdown("""
+        <div style='line-height: 1.1;'>
+            <h3>Munawar Abbas</h3>
+            PhD Scholar<br>
+            Henan University of Technology,Zhengzhou China<br>
+            Email: abbas@stu.haut.edu.cn
+        </div>
+    """, unsafe_allow_html=True)
 
-    # Inverse transformation to obtain IC50 value
-    ic50_value = 10 ** (-pIC50_prediction)
+with col3:
+    # st.image("teacher-photo.jpg", width=100)
+    st.markdown("""
+        <div style='line-height: 1.1;'>
+            <h3>Shumaila Shahid</h3>
+            MS Biochemistry<br>
+            School of Biochemistry and Biotechnology<br>
+            University of the Punjab, Lahore<br>
+            Email: shumaila.ms.sbb@pu.edu.pk
+        </div>
+    """, unsafe_allow_html=True)
 
-    return ic50_value
-
-# Streamlit UI
-st.header('IC50 Value Calculator')
-
-# Input SMILES string
-smiles_input = st.text_area("Enter SMILES notation (separate by newline)", key="smiles_input_ic50")
-smiles_list = smiles_input.split('\n')
-
-# Calculate IC50 button
-if st.button("Calculate IC50"):
-    if smiles_input:
-        ic50_value = calculate_ic50(smiles_input)
-        st.write(f"Predicted IC50 value: {ic50_value}")
-    else:
-        st.write("Please enter a valid SMILES string.")
+#Add University Logo
+left_logo, center_left, center_right, right_logo = st.columns([1, 1, 1, 1])
+#left_logo.image("LOGO_u.jpeg", width=200)
+center_left.image("uol.jpg", width=450)  # Replace with your center-left logo image
+#right_logo.image("image.jpg", width=200)
