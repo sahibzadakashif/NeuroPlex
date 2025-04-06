@@ -92,6 +92,8 @@ with col2:
         </div>
     """, unsafe_allow_html=True)
 
+# Define columns for the profiles
+col1, col2, col3 = st.columns([1, 1, 1])
 with col3:
     # st.image("teacher-photo.jpg", width=100)
     st.markdown("""
