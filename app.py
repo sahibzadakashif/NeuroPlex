@@ -226,12 +226,12 @@ st.markdown(
     """
     <style>
     .title {
-        color: #E6E6FA;  /* Parrot Green color code */
+        color: #7A4E9F;  /* Parrot Green color code */
         font-size: 2em;
         font-weight: bold;
     }
     .header {
-        color: #E6E6FA;  /* Parrot Green color code */
+        color: #7A4E9F;  /* Parrot Green color code */
         font-size: 1.5em;
         font-weight: bold;
     }
