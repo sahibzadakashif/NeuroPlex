@@ -88,13 +88,6 @@ def get_download_link(df):
 def main():
     st.markdown("## <center><strong>NeuroPlex – An Innovative Neuro-AI Approach in Alzheimer's Therapeutics</strong></center>", unsafe_allow_html=True)
 
-    # Image display row
-    colA, colB = st.columns(2)
-    with colA:
-        st.image("image.png", use_column_width=True)
-   #with colB:
-        #st.image("image2.png", use_column_width=True)
-
     st.markdown("""
         <div style='text-align: justify; font-size: 16px; line-height: 1.6; color: #000000;'>
         Welcome to <b>NeuroPlex</b>, a cutting-edge prediction platform designed to accelerate drug discovery for Alzheimer’s Disease.
@@ -106,7 +99,12 @@ def main():
         opening new avenues for therapeutic breakthroughs against Alzheimer’s Disease.
         </div>
     """, unsafe_allow_html=True)
-
+ # Image display row
+    colA, colB = st.columns(2)
+    with colA:
+        st.image("image.png", use_column_width=True)
+   #with colB:
+        #st.image("image2.png", use_column_width=True)
     st.markdown("### Select Input Method")
     input_method = st.radio("", ["Paste SMILES", "Upload File"])
 
