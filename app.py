@@ -24,7 +24,7 @@ st.markdown("""
         color: #000000;
     }
     h1, h2, h3, h4, h5, h6 {
-        color: #006a4e;
+        color: #006a4e; /* Bottle green */
     }
     .stRadio > div {
         color: #000000;
@@ -86,27 +86,22 @@ def get_download_link(df):
 
 # App Layout
 def main():
-    st.markdown("## <center><strong>NeuroPlex – An Innovative Neuro-AI Approach in Alzheimer's Therapeutics</strong></center>", unsafe_allow_html=True)
+    st.title("🧠 NeuroPlex")
+    st.markdown("## NeuroPlex – An Innovative Neuro-AI Approach in Alzheimer's Therapeutics")
 
     st.markdown("""
-        <div style='text-align: justify; font-size: 16px; line-height: 1.6; color: #000000;'>
+    <div style='text-align: justify; font-size: 16px; line-height: 1.6; color: #000000;'>
         Welcome to <b>NeuroPlex</b>, a cutting-edge prediction platform designed to accelerate drug discovery for Alzheimer’s Disease.
         Powered by an advanced machine learning-based regression model, NeuroPlex delivers an outstanding <b>99% prediction accuracy</b> for pIC₅₀ values, 
-        enabling researchers to evaluate the inhibitory potential of compounds with exceptional precision.<br><br>
+        enabling researchers to evaluate the inhibitory potential of compounds with exceptional precision. <br><br>
         This intelligent tool deciphers complex molecular interactions and provides deep insights into compound bioactivity, 
         making it an invaluable asset in targeting key biomarkers associated with Alzheimer’s pathology. 
         Whether you're optimizing lead molecules or screening novel candidates, NeuroPlex empowers you to make data-driven decisions with confidence, 
         opening new avenues for therapeutic breakthroughs against Alzheimer’s Disease.
-        </div>
+    </div>
     """, unsafe_allow_html=True)
- # Image display row
-    colA, colB = st.columns(2)
-    with colB:
-        st.image("image.png", use_column_width=True)
-   #with colB:
-        #st.image("image2.png", use_column_width=True)
-    st.markdown("### Select Input Method")
-    input_method = st.radio("", ["Paste SMILES", "Upload File"])
+
+    input_method = st.radio("Choose Input Method", ["Paste SMILES", "Upload File"])
 
     if input_method == "Paste SMILES":
         smiles_input = st.text_area("🧪 Enter SMILES strings (one per line)")
@@ -137,7 +132,7 @@ def main():
     st.markdown("## 👨‍🔬 NeuroPlex Team")
 
     # Define columns for the profiles
-    col1, col2, col3 = st.columns(3)
+    col1, col2, col3 = st.columns([1, 1, 1])
 
     with col1:
         st.markdown("""
