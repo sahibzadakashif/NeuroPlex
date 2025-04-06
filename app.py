@@ -101,7 +101,7 @@ def main():
     """, unsafe_allow_html=True)
  # Image display row
     colA, colB = st.columns(2)
-    with colA:
+    with colB:
         st.image("image.png", use_column_width=True)
    #with colB:
         #st.image("image2.png", use_column_width=True)
