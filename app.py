@@ -12,45 +12,45 @@ model = joblib.load("model.pkl")
 
 st.set_page_config(page_title="NeuroPlex", layout="wide")
 
-# Inject dark green themed CSS
+# Inject custom CSS
 st.markdown("""
     <style>
     body {
-        background-color: #0b3d0b;
-        color: #e0f2e9;
+        background-color: #ffffff;
+        color: #000000;
     }
     .stApp {
-        background-color: #0b3d0b;
-        color: #e0f2e9;
+        background-color: #ffffff;
+        color: #000000;
     }
     h1, h2, h3, h4, h5, h6 {
-        color: #b9fbc0;
+        color: #006a4e; /* Bottle green */
     }
     .stRadio > div {
-        color: #ffffff;
+        color: #000000;
     }
     .stButton>button {
-        background-color: #14532d;
+        background-color: #006a4e;
         color: white;
         border-radius: 8px;
         padding: 0.6em 1.2em;
         font-weight: bold;
     }
     .stButton>button:hover {
-        background-color: #1a663b;
-        color: #b9fbc0;
+        background-color: #228b73;
+        color: #ffffff;
     }
     .stTextArea, .stFileUploader {
-        background-color: #14532d;
-        color: white;
+        background-color: #f0f0f0;
+        color: black;
         border-radius: 10px;
     }
     .stDataFrame {
-        background-color: #14532d;
-        color: white;
+        background-color: #ffffff;
+        color: black;
     }
     a {
-        color: #90ee90;
+        color: #006a4e;
         font-weight: bold;
     }
     </style>
@@ -88,9 +88,9 @@ def get_download_link(df):
 def main():
     st.title("🧠 NeuroPlex")
     st.markdown("## NeuroPlex – An Innovative Neuro-AI Approach in Alzheimer's Therapeutics")
-    
+
     st.markdown("""
-    <div style='text-align: justify; font-size: 16px; line-height: 1.6; color: #e0f2e9;'>
+    <div style='text-align: justify; font-size: 16px; line-height: 1.6; color: #000000;'>
         Welcome to <b>NeuroPlex</b>, a cutting-edge prediction platform designed to accelerate drug discovery for Alzheimer’s Disease.
         Powered by an advanced machine learning-based regression model, NeuroPlex delivers an outstanding <b>99% prediction accuracy</b> for pIC₅₀ values, 
         enabling researchers to evaluate the inhibitory potential of compounds with exceptional precision. <br><br>
@@ -135,10 +135,9 @@ def main():
     col1, col2, col3 = st.columns([1, 1, 1])
 
     with col1:
-        # st.image("kashif.jpg", width=100)
         st.markdown("""
-            <div style='line-height: 1.1;'>
-                <h3>Dr. Kashif Iqbal Sahibzada</h3>
+            <div style='line-height: 1.3; color: #000000;'>
+                <h3 style='color:#006a4e;'>Dr. Kashif Iqbal Sahibzada</h3>
                 Assistant Professor<br>
                 Department of Health Professional Technologies,<br>
                 Faculty of Allied Health Sciences,<br>
@@ -150,10 +149,9 @@ def main():
         """, unsafe_allow_html=True)
 
     with col2:
-        # st.image("andleeb.jpg", width=100)
         st.markdown("""
-            <div style='line-height: 1.1;'>
-                <h3>Dr. Andleeb Batool</h3>
+            <div style='line-height: 1.3; color: #000000;'>
+                <h3 style='color:#006a4e;'>Dr. Andleeb Batool</h3>
                 Assistant Professor<br>
                 Department of Zoology<br>
                 Government College University, Lahore<br>
@@ -162,10 +160,9 @@ def main():
         """, unsafe_allow_html=True)
 
     with col3:
-        # st.image("shumaila.jpg", width=100)
         st.markdown("""
-            <div style='line-height: 1.1;'>
-                <h3>Shumaila Shahid</h3>
+            <div style='line-height: 1.3; color: #000000;'>
+                <h3 style='color:#006a4e;'>Shumaila Shahid</h3>
                 MS Biochemistry<br>
                 School of Biochemistry and Biotechnology<br>
                 University of the Punjab, Lahore<br>
