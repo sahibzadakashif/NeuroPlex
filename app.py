@@ -9,7 +9,7 @@ from rdkit import Chem
 from rdkit.Chem import AllChem
 
 # Load your trained model
-model = joblib.load("model.pkl")  # Make sure this exists in your app folder
+model = joblib.load("model2.pkl")  # Make sure this exists in your app folder
 
 # Page config
 st.set_page_config(
