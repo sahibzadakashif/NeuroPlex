@@ -70,44 +70,14 @@ def main():
             except Exception as e:
                 st.error(f"❌ Error: {e}")
 
-with col1:
-    # st.image("my-photo.jpg", width=100)
+    st.markdown("---")
+    st.markdown("#### 👨‍🔬 Team NeuroPlex")
     st.markdown("""
-        <div style='line-height: 1.1;'>
-            <h3>Dr. Kashif Iqbal Sahibzada</h3>
-             Assistant Professor | Department of Health Professional Technologies, Faculty of Allied Health Sciences, The University of Lahore<br>
-            Post-Doctoral Fellow | Henan University of Technology,Zhengzhou China<br>
-            Email: kashif.iqbal@dhpt.uol.edu.pk | kashif.iqbal@haut.edu.cn
-        </div>
-    """, unsafe_allow_html=True)
+    - **Dr. Kashif Iqbal Sahibzada** – UOL & HAUT  
+    - **Dr. Andleeb Batool** – GCU Lahore  
+    - **Shumaila Shahid** – PU Lahore
+    """)
 
-with col2:
-    # st.image("colleague-photo.jpg", width=100)
-    st.markdown("""
-        <div style='line-height: 1.1;'>
-            <h3>Dr. Andleeb Batool</h3>
-            Assistant Professor | Department of Zoology<br>
-            Government College University, Lahore<br>
-            Email: andleeb.batool@gcu.edu.pk
-        </div>
-    """, unsafe_allow_html=True)
+if __name__ == "__main__":
+    main()
 
-# Define columns for the profiles
-col1, col2, col3 = st.columns([1, 1, 1])
-with col3:
-    # st.image("teacher-photo.jpg", width=100)
-    st.markdown("""
-        <div style='line-height: 1.1;'>
-            <h3>Shumaila Shahid</h3>
-            MS Biochemistry<br>
-            School of Biochemistry and Biotechnology<br>
-            University of the Punjab, Lahore<br>
-            Email: shumaila.ms.sbb@pu.edu.pk
-        </div>
-    """, unsafe_allow_html=True)
-
-#Add University Logo
-left_logo, center_left, center_right, right_logo = st.columns([1, 1, 1, 1])
-#left_logo.image("LOGO_u.jpeg", width=200)
-center_left.image("uol.jpg", width=450)  # Replace with your center-left logo image
-#right_logo.image("image.jpg", width=200) 
