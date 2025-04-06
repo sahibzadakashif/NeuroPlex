@@ -104,7 +104,7 @@ def main():
     input_method = st.radio("Choose Input Method", ["Paste SMILES", "Upload File"])
 
     if input_method == "Paste SMILES":
-        smiles_input = st.text_area("Enter SMILES strings (one per line)")
+        smiles_input = st.text_area("🧪 Enter SMILES strings (one per line)")
         if st.button("🔍 Predict"):
             smiles_list = [s.strip() for s in smiles_input.splitlines() if s.strip()]
             if not smiles_list:
@@ -129,7 +129,7 @@ def main():
                 st.error(f"❌ Error: {e}")
 
     st.markdown("---")
-    st.markdown("## NeuroPlex Team")
+    st.markdown("##  NeuroPlex Team")
 
     # Define columns for the profiles
     col1, col2, col3 = st.columns([1, 1, 1])
