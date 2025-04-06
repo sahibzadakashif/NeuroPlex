@@ -73,7 +73,7 @@ def main():
  # Add the image and title at the top of the page
     col1, col2, col3 = st.columns([1,2,3])
     with col1:
-        st.image("erm.jpg", width=580)
+        st.image("erm.jpg", width=550)
     with col3:
          st.markdown("<h1 class='header-title'>NeuroPlex – An Artificial Intelligence Approach towards the Drug Discovery based on pIC50 value for Alzheimer's Disease</h1>", unsafe_allow_html=True)
          st.markdown("""
