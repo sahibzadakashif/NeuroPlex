@@ -93,10 +93,8 @@ def main():
     with colA:
         st.image("image.png", use_column_width=True)
     with colB:
-        st.image("alzheimer.png", use_column_width=True)
-
-    st.markdown("""
-    <div style='text-align: justify; font-size: 16px; line-height: 1.6; color: #000000;'>
+        st.markdown("""
+        <div style='text-align: justify; font-size: 16px; line-height: 1.6; color: #000000;'>
         Welcome to <b>NeuroPlex</b>, a cutting-edge prediction platform designed to accelerate drug discovery for Alzheimer’s Disease.
         Powered by an advanced machine learning-based regression model, NeuroPlex delivers an outstanding <b>99% prediction accuracy</b> for pIC₅₀ values, 
         enabling researchers to evaluate the inhibitory potential of compounds with exceptional precision.<br><br>
@@ -104,9 +102,11 @@ def main():
         making it an invaluable asset in targeting key biomarkers associated with Alzheimer’s pathology. 
         Whether you're optimizing lead molecules or screening novel candidates, NeuroPlex empowers you to make data-driven decisions with confidence, 
         opening new avenues for therapeutic breakthroughs against Alzheimer’s Disease.
-    </div>
+        </div>
     """, unsafe_allow_html=True)
-
+# Add university logos to the page
+    left_logo, center, right_logo = st.columns([1, 2, 1])
+    center.image("alzheimer.png", width=650)
     st.markdown("### Select Input Method")
     input_method = st.radio("", ["Paste SMILES", "Upload File"])
 
