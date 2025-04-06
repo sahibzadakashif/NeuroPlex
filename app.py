@@ -8,7 +8,7 @@ from rdkit import Chem
 from rdkit.Chem import AllChem
 
 # Load the model (after retraining with train_model.py)
-model = joblib.load("model.pkl")
+model = joblib.load("model2.pkl")
 
 # Page configuration
 st.set_page_config(page_title='NeuroPlex', layout='wide', page_icon='🧠')
