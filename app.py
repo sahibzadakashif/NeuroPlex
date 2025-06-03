@@ -92,7 +92,7 @@ def main():
     st.markdown("""
     <div style='text-align: justify; font-size: 16px; line-height: 1.6; color: #000000;'>
         Welcome to <b>NeuroPlex</b>, a cutting-edge prediction platform designed to accelerate drug discovery for Alzheimer’s Disease.
-        Powered by an advanced machine learning-based regression model, NeuroPlex delivers an outstanding <b>99% prediction accuracy</b> for pIC₅₀ values, 
+        Powered by an advanced machine learning-based regression model, NeuroPlex delivers an outstanding <b>85% prediction accuracy</b> for pIC₅₀ values, 
         enabling researchers to evaluate the inhibitory potential of compounds with exceptional precision. <br><br>
         This intelligent tool deciphers complex molecular interactions and provides deep insights into compound bioactivity, 
         making it an invaluable asset in targeting key biomarkers associated with Alzheimer’s pathology. 
