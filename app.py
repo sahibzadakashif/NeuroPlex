@@ -132,7 +132,7 @@ def main():
     st.markdown("##  NeuroPlex Team")
 
     # Define columns for the profiles
-    col1, col2, col3 = st.columns([1, 1, 1])
+    col1, col2, col3, col4 = st.columns([1, 1, 1, 1])
 
     with col1:
         st.markdown("""
@@ -153,7 +153,7 @@ def main():
             <div style='line-height: 1.3; color: #000000;'>
                 <h3 style='color:#006a4e;'>Dr. Dong Qing Wei</h3>
                 Professor<br>
-                Shanghai Jiao Tong University,China
+                Shanghai Jiao Tong University, China
             </div>
         """, unsafe_allow_html=True)
 
@@ -162,18 +162,19 @@ def main():
             <div style='line-height: 1.3; color: #000000;'>
                 <h3 style='color:#006a4e;'>Dr. Munawar Abbas</h3>
                 PhD Biological Sciences<br>
-                Henan University of Technology,Zhengzhou China
+                Henan University of Technology, Zhengzhou, China
             </div>
         """, unsafe_allow_html=True)
-    
-     with col4:
+
+    with col4:
         st.markdown("""
             <div style='line-height: 1.3; color: #000000;'>
                 <h3 style='color:#800000;'>Arif Ali</h3>
-                Phd Researcher<br>
-                <b>Shanghai Jiao Tong University, China
+                PhD Researcher<br>
+                Shanghai Jiao Tong University, China
             </div>
         """, unsafe_allow_html=True)
+
 
 if __name__ == "__main__":
     main()
