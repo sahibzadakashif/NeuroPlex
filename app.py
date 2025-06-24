@@ -169,7 +169,7 @@ def main():
     with col4:
         st.markdown("""
             <div style='line-height: 1.3; color: #000000;'>
-                <h3 style='color:#800000;'>Arif Ali</h3>
+                <h3 style='color:#006a4e;'>Arif Ali</h3>
                 PhD Researcher<br>
                 Shanghai Jiao Tong University, China
             </div>
